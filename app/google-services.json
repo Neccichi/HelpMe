@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "278832253913",
+    "project_id": "helpme-437d2",
+    "storage_bucket": "helpme-437d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:278832253913:android:a5ecf595978f442a2ea7c8",
+        "android_client_info": {
+          "package_name": "com.messenger.helpme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "278832253913-j0vesh4h10ieofbnbipjqj85phni4skn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.messenger.helpme",
+            "certificate_hash": "f85a964300f0d1bc13dae24397706609db7436a9"
+          }
+        },
+        {
+          "client_id": "278832253913-eofk475p5vgt6bhnoosdkjkclclqtql8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBEsuhqKKno2LzA_5ZK_oDAGRpJwRcYBM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "278832253913-eofk475p5vgt6bhnoosdkjkclclqtql8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
