@@ -8,14 +8,56 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.messenger.helpme.R
+import com.messenger.helpme.databinding.ActivityChatLogBinding
+import com.messenger.helpme.databinding.ActivityRegisterBinding
 import com.messenger.helpme.models.User
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.Item
+
 
 class ChatLogActivity : AppCompatActivity() {
-
+    private lateinit var binding: ActivityChatLogBinding
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityChatLogBinding.inflate(LayoutInflater.from(this))
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_chat_log)
+        setContentView(binding.root)
 
-        supportActionBar?.title = "Chat log"
+//    val username = intent.getStringExtra(NewMessageActivity.USER_KEY)
+        val user = intent.getParcelableExtra<User>(NewMessageActivity.USER_KEY)
+
+        supportActionBar?.title = user?.username
+
+        val adapter = GroupAdapter<ViewHolder>()
+
+        adapter.add(ChatFromItem())
+        adapter.add(ChatToItem())
+        adapter.add(ChatFromItem())
+        adapter.add(ChatToItem())
+        adapter.add(ChatFromItem())
+        adapter.add(ChatToItem())
+        adapter.add(ChatFromItem())
+        adapter.add(ChatToItem())
+
+        binding.recyclerviewChatLog.adapter = adapter
+    }
+}
+
+class ChatFromItem: Item<ViewHolder>() {
+    override fun bind(viewHolder: ViewHolder, position: Int) {
+
+    }
+
+    override fun getLayout(): Int {
+        return R.layout.chat_from_row
+    }
+}
+
+class ChatToItem: Item<ViewHolder>() {
+    override fun bind(viewHolder: ViewHolder, position: Int) {
+
+    }
+
+    override fun getLayout(): Int {
+        return R.layout.chat_to_row
     }
 }
