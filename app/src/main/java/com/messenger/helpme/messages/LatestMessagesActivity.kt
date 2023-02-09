@@ -6,19 +6,20 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 import com.messenger.helpme.R
 import com.messenger.helpme.RegisterActivity
 
 class LatestMessagesActivity : AppCompatActivity() {
-
     private val FLAGS = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_latest_messages)
 
         verifyUserIsLoggedIn()
+
+        supportActionBar?.title = "HelpMe"
     }
 
     private fun verifyUserIsLoggedIn() {
