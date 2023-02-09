@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.messenger.helpme.R
 import com.messenger.helpme.databinding.ActivityChatLogBinding
 import com.messenger.helpme.databinding.ActivityRegisterBinding
+
 import com.messenger.helpme.models.User
 import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 
 
@@ -27,7 +29,7 @@ class ChatLogActivity : AppCompatActivity() {
 
         supportActionBar?.title = user?.username
 
-        val adapter = GroupAdapter<ViewHolder>()
+        val adapter = GroupAdapter<GroupieViewHolder>()
 
         adapter.add(ChatFromItem())
         adapter.add(ChatToItem())
@@ -42,8 +44,8 @@ class ChatLogActivity : AppCompatActivity() {
     }
 }
 
-class ChatFromItem: Item<ViewHolder>() {
-    override fun bind(viewHolder: ViewHolder, position: Int) {
+class ChatFromItem: Item<GroupieViewHolder>() {
+    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
 
     }
 
@@ -52,8 +54,8 @@ class ChatFromItem: Item<ViewHolder>() {
     }
 }
 
-class ChatToItem: Item<ViewHolder>() {
-    override fun bind(viewHolder: ViewHolder, position: Int) {
+class ChatToItem: Item<GroupieViewHolder>() {
+    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
 
     }
 
