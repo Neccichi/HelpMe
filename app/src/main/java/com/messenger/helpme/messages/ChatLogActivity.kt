@@ -1,6 +1,7 @@
 package com.messenger.helpme.messages
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,28 +9,27 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import com.messenger.helpme.R
+import com.messenger.helpme.RegisterActivity.Companion.TAG
 import com.messenger.helpme.models.Message
 import com.messenger.helpme.models.User
 
 class ChatLogActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var user: User // variable to hold the User object for the selected user
+    private lateinit var user: User
+    private lateinit var messages: MutableList<Message>
+    private lateinit var adapter: ChatAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
 
-        supportActionBar?.title = "Loading..." // или любая другая заглушка, пока не будет получен объект User
+        supportActionBar?.title = "Loading..."
 
-        // Отримуємо Id юзера
         val userId = intent.getStringExtra("USER_KEY")
 
-        // Отримаэмо дані користувача з Firebase за допомогою ID
         val ref = FirebaseDatabase.getInstance().getReference("/users/$userId")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -38,31 +38,37 @@ class ChatLogActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // обработка ошибок
-                Toast.makeText(this@ChatLogActivity, "Error: ${databaseError.message}", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "onCancelled", databaseError.toException())
             }
         })
 
         recyclerView = findViewById(R.id.recyclerview_chat_log)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // получаем список сообщений из Firebase
-        val messagesRef = FirebaseDatabase.getInstance().getReference("/user-messages/$userId")
-        messagesRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val messages = mutableListOf<Message>()
-                dataSnapshot.children.forEach { messageSnapshot ->
-                    val message = messageSnapshot.getValue(Message::class.java)
-                    message?.let { messages.add(it) }
-                }
-                recyclerView.adapter = ChatAdapter(messages)
+        messages = mutableListOf()
+        adapter = ChatAdapter(messages)
+        recyclerView.adapter = adapter
+
+        val messagesRef = FirebaseDatabase.getInstance().getReference("/user-messages/${FirebaseAuth.getInstance().uid}/$userId")
+        messagesRef.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                val message = dataSnapshot.getValue(Message::class.java)
+                messages.add(message!!)
+                adapter.notifyItemInserted(messages.size - 1)
+                recyclerView.scrollToPosition(messages.size - 1)
             }
 
+            override fun onChildChanged(dataSnapshot: DataSnapshot, previousChildName: String?) {}
+
+            override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
+
+            override fun onChildMoved(dataSnapshot: DataSnapshot, previousChildName: String?) {}
+
             override fun onCancelled(databaseError: DatabaseError) {
-                // обработка ошибок
-                Toast.makeText(this@ChatLogActivity, "Error: ${databaseError.message}", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "onCancelled", databaseError.toException())
             }
         })
     }
 }
+
 
