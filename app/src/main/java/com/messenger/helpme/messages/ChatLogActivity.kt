@@ -54,7 +54,7 @@ class ChatLogActivity : AppCompatActivity() {
                         val message = dataSnapshot.getValue(Message::class.java) ?: return
                         messages.add(message)
                         adapter.notifyItemInserted(messages.size - 1)
-                        recyclerView.scrollToPosition(messages.size - 1)
+                        recyclerView.smoothScrollToPosition(messages.size - 1)
                     }
 
                     override fun onChildChanged(dataSnapshot: DataSnapshot, previousChildName: String?) {}

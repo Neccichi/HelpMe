@@ -43,3 +43,4 @@ class ChatAdapter(private val messages: List<Message>) : RecyclerView.Adapter<Ch
         return messages.size
     }
 }
+

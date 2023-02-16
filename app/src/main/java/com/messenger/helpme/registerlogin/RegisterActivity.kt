@@ -37,7 +37,7 @@ class RegisterActivity : AppCompatActivity() {
             performRegister()
         }
 
-       binding.alreadyHaveAccountTextView.setOnClickListener {
+        binding.alreadyHaveAccountTextView.setOnClickListener {
             Log.d("RegisterActivity", "Try to show login activity")
 
             // launch the login activity somehow
