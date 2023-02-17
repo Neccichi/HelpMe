@@ -42,6 +42,7 @@ class ChatLogActivity : AppCompatActivity() {
                 supportActionBar?.title = user.username
 
                 messages = mutableListOf()
+                val currentUser = FirebaseAuth.getInstance().currentUser?.let { User(it.uid, it.displayName ?: "", it.photoUrl?.toString() ?: "") }
                 adapter = ChatAdapter(messages)
 
                 recyclerView = findViewById(R.id.recyclerview_chat_log)
@@ -97,4 +98,5 @@ class ChatLogActivity : AppCompatActivity() {
                 }
         }
     }
+
 }

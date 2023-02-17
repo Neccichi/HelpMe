@@ -7,12 +7,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.messenger.helpme.R
 import com.messenger.helpme.models.Message
+import com.squareup.picasso.Picasso
 
 class ChatAdapter(private val messages: List<Message>) : RecyclerView.Adapter<ChatAdapter.MessageViewHolder>() {
 
     inner class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val messageText: TextView = itemView.findViewById(R.id.textView)
-
         fun bind(message: Message) {
             messageText.text = message.text
         }

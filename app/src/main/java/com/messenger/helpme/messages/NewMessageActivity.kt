@@ -32,7 +32,11 @@ class NewMessageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_message)
 
-        supportActionBar?.title = "Select User"
+        //supportActionBar?.title = "Select User"
+        supportActionBar?.apply {
+            title = "Select User"
+            setDisplayHomeAsUpEnabled(true)
+        }
 
         recyclerviewNewMessage = findViewById(R.id.recyclerview_newmessage)
         recyclerviewNewMessage.layoutManager = LinearLayoutManager(this)
@@ -42,6 +46,10 @@ class NewMessageActivity : AppCompatActivity() {
         fetchUsers()
 
     }
+   /* override fun onSupportNavigateUp(): Boolean {
+        onBackPressed() // Викликає метод onBackPressed, який повертає вас до попередньої активності
+        return true
+    }*/
 
     private fun fetchUsers() {
         val ref = FirebaseDatabase.getInstance().getReference("/users")
