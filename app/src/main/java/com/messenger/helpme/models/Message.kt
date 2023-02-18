@@ -6,7 +6,8 @@ data class Message(
     val fromId: String,
     val toId: String,
     val time: Long,
-    val isSentByCurrentUser: Boolean // новое свойство для указания, отправлено ли сообщение текущим пользователем
+    val isSentByCurrentUser: Boolean ,
+    val chatId: String=""
 ) {
     constructor() : this("", "", "", "", -1, false) // Required default constructor for Firebase
 }

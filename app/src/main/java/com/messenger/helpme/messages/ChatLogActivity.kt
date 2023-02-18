@@ -31,6 +31,7 @@ class ChatLogActivity : AppCompatActivity() {
             return
         }
 
+
         supportActionBar?.title = "Loading..."
 
         val userId = intent.getStringExtra("USER_KEY") ?: return
@@ -49,7 +50,11 @@ class ChatLogActivity : AppCompatActivity() {
                 recyclerView.layoutManager = LinearLayoutManager(this@ChatLogActivity)
                 recyclerView.adapter = adapter
 
-                val messagesRef = FirebaseDatabase.getInstance().getReference("/user-messages/${FirebaseAuth.getInstance().uid}/$userId")
+                //val messagesRef = FirebaseDatabase.getInstance().getReference("/user-messages/${FirebaseAuth.getInstance().uid}/$userId")
+                val messagesRef = FirebaseDatabase.getInstance().getReference("/user-messages").child(getChatId(FirebaseAuth.getInstance().uid!!, userId))
+
+                //val messagesRef = FirebaseDatabase.getInstance().getReference("/user-messages/${FirebaseAuth.getInstance().uid}-$userId")
+                //val messagesRef = FirebaseDatabase.getInstance().getReference("/user-messages").child(FirebaseAuth.getInstance().uid!!).child(userId)
                 messagesRef.addChildEventListener(object : ChildEventListener {
                     override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                         val message = dataSnapshot.getValue(Message::class.java) ?: return
@@ -87,15 +92,34 @@ class ChatLogActivity : AppCompatActivity() {
 
             val fromId = FirebaseAuth.getInstance().uid ?: return@setOnClickListener
             val toId = user.uid
-            val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
+            val chatId = getChatId(fromId, toId)
+            val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$chatId").push()
 
-            val message = Message(ref.key ?: return@setOnClickListener, text, fromId!!, toId!!, System.currentTimeMillis() / 1000, true)
+
+
+
+
+           //val fromId = FirebaseAuth.getInstance().uid ?: return@setOnClickListener
+           // val toId = user.uid
+            //val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
+            //val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId-$toId").push()
+
+            //val message = Message(ref.key ?: return@setOnClickListener, text, fromId!!, toId!!, System.currentTimeMillis() / 1000, true)
+            val message = Message(ref.key ?: return@setOnClickListener, text, fromId, toId, System.currentTimeMillis() / 1000, true, chatId)
+
 
             ref.setValue(message)
                 .addOnSuccessListener {
                     Log.d(TAG, "Saved our chat message: ${ref.key}")
                     editText.text.clear()
                 }
+        }
+    }
+    private fun getChatId(uid1: String, uid2: String): String {
+        return if (uid1 < uid2) {
+            "$uid1-$uid2"
+        } else {
+            "$uid2-$uid1"
         }
     }
 
