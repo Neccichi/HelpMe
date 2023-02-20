@@ -7,7 +7,8 @@ data class Message(
     val toId: String,
     val time: Long,
     val isSentByCurrentUser: Boolean ,
-    val chatId: String=""
+    val chatId: String="",
+    val addPhototoChat: String=""
 ) {
-    constructor() : this("", "", "", "", -1, false) // Required default constructor for Firebase
+    constructor() : this("", "", "", "", -1, false)
 }

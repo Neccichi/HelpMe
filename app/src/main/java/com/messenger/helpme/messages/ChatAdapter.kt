@@ -22,7 +22,7 @@ class ChatAdapter(private val messages: List<Message>) : RecyclerView.Adapter<Ch
         val view = if (viewType == 0) {
             LayoutInflater.from(parent.context).inflate(R.layout.chat_from_row, parent, false)
         } else {
-            LayoutInflater.from(parent.context).inflate(R.layout.chat_to_row, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.chat_from_row, parent, false)
         }
         return MessageViewHolder(view)
     }
