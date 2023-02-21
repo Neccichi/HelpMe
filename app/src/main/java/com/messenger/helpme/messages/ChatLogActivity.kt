@@ -10,13 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.storage.FirebaseStorage
 import com.messenger.helpme.R
 import com.messenger.helpme.RegisterActivity.Companion.TAG
 import com.messenger.helpme.models.Message
 import com.messenger.helpme.models.User
 import com.messenger.helpme.registerlogin.LoginActivity
-import java.util.*
 
 class ChatLogActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView

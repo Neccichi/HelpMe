@@ -95,6 +95,7 @@ class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         usernameTextViewNewMessage.text = user.username
         Picasso.get().load(user.profileImageUrl).into(imageViewNewMessage)
 
+
         itemView.setOnClickListener {
             val intent = Intent(itemView.context, ChatLogActivity::class.java)
             intent.putExtra("USER_KEY", user.uid)
