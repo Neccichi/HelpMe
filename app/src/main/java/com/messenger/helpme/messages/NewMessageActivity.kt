@@ -32,7 +32,6 @@ class NewMessageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_message)
 
-        //supportActionBar?.title = "Select User"
         supportActionBar?.apply {
             title = "Select User"
             setDisplayHomeAsUpEnabled(true)

@@ -23,6 +23,7 @@ class ChatLogActivity : AppCompatActivity() {
     private lateinit var user: User
     private lateinit var messages: MutableList<Message>
     private lateinit var adapter: ChatAdapter
+    private lateinit var users: List<User>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,8 +45,11 @@ class ChatLogActivity : AppCompatActivity() {
                 user = dataSnapshot.getValue(User::class.java) ?: return
                 supportActionBar?.title = user.username
 
+                val usersMap = dataSnapshot.child("/users").children.mapNotNull { it.getValue(User::class.java) }
+                users = usersMap.filter { it.uid != FirebaseAuth.getInstance().currentUser?.uid }
+
                 messages = mutableListOf()
-                adapter = ChatAdapter(messages, FirebaseAuth.getInstance().currentUser!!.uid)
+                adapter = ChatAdapter(messages, FirebaseAuth.getInstance().currentUser!!.uid, users)
 
                 recyclerView = findViewById(R.id.recyclerview_chat_log)
                 recyclerView.layoutManager = LinearLayoutManager(this@ChatLogActivity)
