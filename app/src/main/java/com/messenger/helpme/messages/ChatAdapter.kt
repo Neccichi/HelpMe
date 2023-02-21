@@ -31,7 +31,7 @@ class ChatAdapter(
 
         fun bind(message: Message, user: User) {
             messageText.text = message.text
-            val photoUrlTest = message.profileImageInChat
+            val photoUrlTest = message.photoUrl
             Log.d(RegisterActivity.TAG, "Test photo url: ${photoUrlTest}")
             Log.d(RegisterActivity.TAG, "Test photo url2: ${user.profileImageUrl}")
                 val photoUrl = if (itemViewType == 0) {
@@ -46,6 +46,7 @@ class ChatAdapter(
         }
 
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val view = if (viewType == 0) {
@@ -71,9 +72,11 @@ class ChatAdapter(
         val intent = Intent(holder.itemView.context, ChatLogActivity::class.java)
         intent.putExtra(USER_KEY, user.uid)
         holder.bind(message, user)
+
     }
 
     override fun getItemCount(): Int {
         return messages.size
     }
+
 }

@@ -10,11 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
 import com.messenger.helpme.R
 import com.messenger.helpme.RegisterActivity.Companion.TAG
 import com.messenger.helpme.models.Message
 import com.messenger.helpme.models.User
 import com.messenger.helpme.registerlogin.LoginActivity
+import java.util.*
 
 class ChatLogActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -80,6 +82,7 @@ class ChatLogActivity : AppCompatActivity() {
         })
 
         val sendButton = findViewById<Button>(R.id.send_button_chat_log)
+        val sendPhotoButton = findViewById<Button>(R.id.button_image_send)
         val editText = findViewById<EditText>(R.id.edittext_chat_log)
 
         sendButton.setOnClickListener {
@@ -101,6 +104,12 @@ class ChatLogActivity : AppCompatActivity() {
                     editText.text.clear()
                 }
         }
+        sendPhotoButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, 0)
+
+        }
     }
 
     private fun getChatId(uid1: String, uid2: String): String {
@@ -109,6 +118,34 @@ class ChatLogActivity : AppCompatActivity() {
         } else {
             "$uid2-$uid1"
         }
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
+            val photoUrl = data.data
+            val ref = FirebaseStorage.getInstance().getReference("/images/${UUID.randomUUID()}")
+
+            ref.putFile(photoUrl!!)
+                .addOnSuccessListener {
+                    ref.downloadUrl.addOnSuccessListener { uri ->
+                        val fromId = FirebaseAuth.getInstance().uid ?: return@addOnSuccessListener
+                        val toId = user.uid
+                        val chatId = getChatId(fromId, toId)
+                        val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$chatId").push()
+
+                        val message = Message(ref.key ?: return@addOnSuccessListener, "", fromId, toId, System.currentTimeMillis() / 1000, false, chatId, uri.toString())
+                        ref.setValue(message)
+                            .addOnSuccessListener {
+                                Log.d(TAG, "Saved our chat message: ${ref.key}")
+                            }
+                    }
+                }
+        }
+    }
+    companion object {
+        private const val TAG = "ChatLogActivity"
+        private const val REQUEST_IMAGE_PICK = 100
     }
 
 }

@@ -8,8 +8,7 @@ data class Message(
     val time: Long,
     val isSentByCurrentUser: Boolean ,
     val chatId: String="",
-    val profileImageInChat: String="    ",
-    val photoUrl: String=""
+    var photoUrl: String=""
 ) {
     constructor() : this("", "", "", "", -1, false)
 }
