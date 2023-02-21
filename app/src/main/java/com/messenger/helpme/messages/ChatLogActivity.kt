@@ -23,7 +23,7 @@ class ChatLogActivity : AppCompatActivity() {
     private lateinit var user: User
     private lateinit var messages: MutableList<Message>
     private lateinit var adapter: ChatAdapter
-    private val PICK_IMAGE_REQUEST = 1
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,13 +33,6 @@ class ChatLogActivity : AppCompatActivity() {
             finish()
             return
         }
-        val photoAddButton = findViewById<Button>(R.id.photo_add_btn)
-        photoAddButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, PICK_IMAGE_REQUEST)
-        }
-
 
         supportActionBar?.title = "Loading..."
 
@@ -52,18 +45,13 @@ class ChatLogActivity : AppCompatActivity() {
                 supportActionBar?.title = user.username
 
                 messages = mutableListOf()
-                val currentUser = FirebaseAuth.getInstance().currentUser?.let { User(it.uid, it.displayName ?: "", it.photoUrl?.toString() ?: "") }
                 adapter = ChatAdapter(messages)
 
                 recyclerView = findViewById(R.id.recyclerview_chat_log)
                 recyclerView.layoutManager = LinearLayoutManager(this@ChatLogActivity)
                 recyclerView.adapter = adapter
 
-                //val messagesRef = FirebaseDatabase.getInstance().getReference("/user-messages/${FirebaseAuth.getInstance().uid}/$userId")
                 val messagesRef = FirebaseDatabase.getInstance().getReference("/user-messages").child(getChatId(FirebaseAuth.getInstance().uid!!, userId))
-
-                //val messagesRef = FirebaseDatabase.getInstance().getReference("/user-messages/${FirebaseAuth.getInstance().uid}-$userId")
-                //val messagesRef = FirebaseDatabase.getInstance().getReference("/user-messages").child(FirebaseAuth.getInstance().uid!!).child(userId)
                 messagesRef.addChildEventListener(object : ChildEventListener {
                     override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                         val message = dataSnapshot.getValue(Message::class.java) ?: return
@@ -104,21 +92,7 @@ class ChatLogActivity : AppCompatActivity() {
             val chatId = getChatId(fromId, toId)
             val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$chatId").push()
 
-
-
-
-
-            //val fromId = FirebaseAuth.getInstance().uid ?: return@setOnClickListener
-            // val toId = user.uid
-            //val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
-            //val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId-$toId").push()
-
-
-            //val message = Message(ref.key ?: return@setOnClickListener, text, fromId!!, toId!!, System.currentTimeMillis() / 1000, true)
-
             val message = Message(ref.key ?: return@setOnClickListener, text, fromId, toId, System.currentTimeMillis() / 1000, true, chatId)
-
-
             ref.setValue(message)
                 .addOnSuccessListener {
                     Log.d(TAG, "Saved our chat message: ${ref.key}")
@@ -126,47 +100,12 @@ class ChatLogActivity : AppCompatActivity() {
                 }
         }
     }
+
     private fun getChatId(uid1: String, uid2: String): String {
         return if (uid1 < uid2) {
             "$uid1-$uid2"
         } else {
             "$uid2-$uid1"
-        }
-    }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
-            val selectedImageUri = data.data
-            val ref = FirebaseStorage.getInstance().getReference("/images/${UUID.randomUUID()}")
-
-            ref.putFile(selectedImageUri!!)
-                .addOnSuccessListener {
-                    Log.d(TAG, "Successfully uploaded image: ${it.metadata?.path}")
-
-                    ref.downloadUrl.addOnSuccessListener { uri ->
-                        Log.d(TAG, "File location: $uri")
-
-                        val message = Message(
-                            "",
-                            "",
-                            FirebaseAuth.getInstance().uid!!,
-                            user.uid,
-                            System.currentTimeMillis() / 1000,
-                            true,
-                            getChatId(FirebaseAuth.getInstance().uid!!, user.uid),
-                            uri.toString()
-                        )
-
-                        val ref = FirebaseDatabase.getInstance().getReference("/user-messages/${message.chatId}").push()
-                        ref.setValue(message)
-                            .addOnSuccessListener {
-                                Log.d(TAG, "Saved chat message with image: ${ref.key}")
-                            }
-                    }
-                }
-                .addOnFailureListener {
-                    Log.e(TAG, "Failed to upload image to storage: ${it.message}")
-                }
         }
     }
 
