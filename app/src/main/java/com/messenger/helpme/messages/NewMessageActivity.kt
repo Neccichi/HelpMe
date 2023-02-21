@@ -46,11 +46,6 @@ class NewMessageActivity : AppCompatActivity() {
         fetchUsers()
 
     }
-   /* override fun onSupportNavigateUp(): Boolean {
-        onBackPressed() // Викликає метод onBackPressed, який повертає вас до попередньої активності
-        return true
-    }*/
-
     private fun fetchUsers() {
         val ref = FirebaseDatabase.getInstance().getReference("/users")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {

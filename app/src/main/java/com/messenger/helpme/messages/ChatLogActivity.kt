@@ -45,7 +45,7 @@ class ChatLogActivity : AppCompatActivity() {
                 supportActionBar?.title = user.username
 
                 messages = mutableListOf()
-                adapter = ChatAdapter(messages)
+                adapter = ChatAdapter(messages, FirebaseAuth.getInstance().currentUser!!.uid)
 
                 recyclerView = findViewById(R.id.recyclerview_chat_log)
                 recyclerView.layoutManager = LinearLayoutManager(this@ChatLogActivity)
