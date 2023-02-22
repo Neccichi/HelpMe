@@ -48,6 +48,7 @@ class NewMessageActivity : AppCompatActivity() {
     private fun fetchUsers() {
         val ref = FirebaseDatabase.getInstance().getReference("/users")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
+
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 dataSnapshot.children.forEach {
                     Log.d("NewMessage", it.toString())

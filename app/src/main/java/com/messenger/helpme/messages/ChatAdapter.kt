@@ -34,9 +34,10 @@ class ChatAdapter(
             val photoUrlTest = message.photoUrl
             Log.d(RegisterActivity.TAG, "Test photo url: ${photoUrlTest}")
             Log.d(RegisterActivity.TAG, "Test photo url2: ${user.profileImageUrl}")
-                val photoUrl = if (itemViewType == 0) {
+            val photoUrl = if (itemViewType == 0) {
                 // chat_to_row
-                "https://amiel.club/uploads/posts/2022-03/1647661051_6-amiel-club-p-kartinki-manga-naruto-6.png"
+                LatestMessagesActivity.currentUser?.profileImageUrl
+                //"https://amiel.club/uploads/posts/2022-03/1647661051_6-amiel-club-p-kartinki-manga-naruto-6.png"
             } else {
                 // chat_from_row
                 "https://i.pinimg.com/736x/49/b0/50/49b0501c70fde974bfeb85180561b8e9.jpg"
