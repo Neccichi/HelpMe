@@ -38,6 +38,12 @@ class ChatLogActivity : AppCompatActivity() {
         supportActionBar?.title = "Loading..."
 
         val userId = intent.getStringExtra("USER_KEY") ?: return
+        val userIdAvatar = intent.getStringExtra("USER_KEY_AVATAR") ?: return
+
+        //val userIdPhotoAvatar = user.profileImageUrl
+        //Log.d("LatestMessages", "сAAAAAAAAAAAA ${userIdPhotoAvatar}")//null
+        Log.d("LatestMessages", "сAAAAAAAAAAAA ${userId}")//null
+        Log.d("LatestMessages", "сAAAAAAAAAAAA ${userIdAvatar}")//null
 
         val ref = FirebaseDatabase.getInstance().getReference("/users/$userId")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -49,7 +55,7 @@ class ChatLogActivity : AppCompatActivity() {
                 users = usersMap.filter { it.uid != FirebaseAuth.getInstance().currentUser?.uid }
 
                 messages = mutableListOf()
-                adapter = ChatAdapter(messages, FirebaseAuth.getInstance().currentUser!!.uid, users)
+                adapter = ChatAdapter(messages, FirebaseAuth.getInstance().currentUser!!.uid, users, userIdAvatar)
 
                 recyclerView = findViewById(R.id.recyclerview_chat_log)
                 recyclerView.layoutManager = LinearLayoutManager(this@ChatLogActivity)
@@ -146,6 +152,7 @@ class ChatLogActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "ChatLogActivity"
         private const val REQUEST_IMAGE_PICK = 100
+        const val USER_KEY_AVATAR = "USER_KEY_AVATAR"
     }
 
 }

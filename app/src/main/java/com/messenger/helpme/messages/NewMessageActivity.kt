@@ -24,6 +24,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 class NewMessageActivity : AppCompatActivity() {
     companion object {
         const val USER_KEY = "USER_KEY"
+        const val USER_KEY_AVATAR = "USER_KEY_AVATAR"
     }
     private lateinit var recyclerviewNewMessage: RecyclerView
     private lateinit var adapter: UserAdapter
@@ -100,6 +101,7 @@ class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         itemView.setOnClickListener {
             val intent = Intent(itemView.context, ChatLogActivity::class.java)
             intent.putExtra("USER_KEY", user.uid)
+            intent.putExtra("USER_KEY_AVATAR", user.profileImageUrl)
             itemView.context.startActivity(intent)
             (itemView.context as NewMessageActivity).finish()
         }

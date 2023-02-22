@@ -25,6 +25,7 @@ class LatestMessagesActivity : AppCompatActivity() {
     companion object {
         var currentUser: User? = null
         const val USER_KEY = "USER_KEY"
+        const val USER_KEY_AVATAR = "USER_KEY_AVATAR"
 
     }
 
