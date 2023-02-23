@@ -1,7 +1,6 @@
 package com.messenger.helpme.messages
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.messenger.helpme.R
-import com.messenger.helpme.messages.ChatLogActivity
+
 import com.messenger.helpme.models.Message
 import com.squareup.picasso.Picasso
 import com.messenger.helpme.models.User
@@ -28,24 +27,34 @@ class ChatAdapter(
 
     inner class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val messageText: TextView = itemView.findViewById(R.id.textView)
-        private val messagePhoto: ImageView = itemView.findViewById(R.id.imageView)
+        private val messageAvatar: ImageView = itemView.findViewById(R.id.imageView)
+        private val messagePhoto: ImageView = itemView.findViewById(R.id.imageView2)
 
         fun bind(message: Message, user: User) {
-            messageText.text = message.text
-            val PleaseWork =  userKeyAvatar
+            if (!message.photoUrl.isNullOrEmpty()) {
+                messagePhoto.visibility = View.VISIBLE
+                messageText.visibility = View.GONE
+                Picasso.get().load(message.photoUrl).into(messagePhoto)
+            } else {
+                messagePhoto.visibility = View.GONE
+                messageText.visibility = View.VISIBLE
+                messageText.text = message.text
+            }
+
+            val PleaseWork = userKeyAvatar
 
             val photoUrl = if (itemViewType == 1) {
                 // chat_to_row (messages sent by other users)
-                Log.d("LatestMessages", "USER_KEY_AVATAR ${ChatLogActivity.USER_KEY_AVATAR}")//null
-                Log.d("LatestMessages", "PleaseWork ${PleaseWork}")//null
                 PleaseWork ?: "https://i.pinimg.com/736x/49/b0/50/49b0501c70fde974bfeb85180561b8e9.jpg"
-
             } else {
                 // chat_from_row (messages sent by current user)
                 LatestMessagesActivity.currentUser?.profileImageUrl
             }
-            Picasso.get().load(photoUrl).into(messagePhoto)
+
+            Picasso.get().load(photoUrl).into(messageAvatar)
         }
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
